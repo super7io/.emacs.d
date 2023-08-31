@@ -1,0 +1,164 @@
+#+TITLE AM's GNU Emacs Config
+#+AUTHOR Alexander Murphy (AM)
+#+DESCRIPTION AM's personal Emacs config.
+#+STARTUP: showeverything
+#+OPTIONS: toc:2
+
+* MELPA
+
+** Evil
+
+#+begin_src emacs-lisp
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+  ;; Set up package.el to work with MELPA
+  (require 'package)
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/"))
+  (package-initialize)
+  (package-refresh-contents)
+
+  ;; Download Evil
+  (unless (package-installed-p 'evil)
+    (package-install 'evil))
+
+  ;; Enable Evil
+  (require 'evil)
+  (evil-mode 1)
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages '(evil)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
+#+end_src
+
+* Programs
+
+* Settings
+
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(add-hook 'prog-mode-hook 'global-display-line-numbers-mode)
+#+end_src
+
+* Keybinds
+
+* Cheatsheet
+
+C-z -- come out of evil mode when using terminal (so you can use neovim within emacs terminal emulator)
+
+C-c C-j line/char mode in terminal
+
+M-x display-line-numbers-mode
+M-x global-display-line-numbers-mode
+
+
+M-! cmd RET -- run shell command cmd and display output
+C-x k -- kills buffer (terminals must be 'exited' first)
+
+C-x d -- invokes dired
+
+In terminal mode, C-x cmd becomes C-c cmd
+
+There is both M-x shell and M-x term
+
+Clear shell when emacs is the terminal (M-x shell) with C-c M-o
+
+C-x o -- switch to next open window
+
+C-u M-! cmd -- deposit output of shell command cmd into the current buffer
+
+* Non-emacs
+
+** Fedora
+
+gnome tweaks -> caps as control
+extension manager -> hide top bar (requires firefox extension as installation method)
+
+** Linux
+killall gnome-tweaks
+
+killall gpg-agent
+gpg --symmetric notes
+gpg --decrypt notes.gpg
+
+cat /proc/sys/kernel/random/entropy_avail -- roughly >3k is ok (https://www.redhat.com/sysadmin/creating-gpg-keypairs)
+
+change .bashrc to include: EDITOR=/usr/bin/nvim
+
+git config --local credential.helper store
+
+* Notes
+
+notes1 29 aug 2023 2219
+
+https://projectbullrun.org/dual-ec/vulnerability.html
+
+https://blog.stribik.technology/2015/01/04/secure-secure-shell.html
+
+https://www.cl.cam.ac.uk/~mgk25/otpw.html
+
+https://mpv.io/
+
+*** Passwords
+open emacs (Alt-e)
+open scratch buffer (C-x b *scratch* RET)
+run shell command (C-u M-! gpg -d ~/notes.gpg RET)
+kill gpg agent (M-! killall gpg-agent)
+delete scratch buffer (:bd RET)
+close emacs (C-x C-c)
+
+https://www.idesign.net/
+
+dnf info rng-tools
+
+*** Signing emails
+open emacs (Alt-e)
+open scratch buffer (C-x b *scratch* RET)
+copy email text *up to line of the sign off* not any whitespace or email sig! into buffer (Ctrl-c ... p)
+visual select all text in buffer (gg ... VG)
+run sign command (M-| gpg --armor --sign RET)
+enter passphrase
+copy and paste sig into email, send!
+
+My armor public email signing key (test) is below, exported using
+
+gpg --armor --export super7@alexmurphy.io
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBGTvR+8BEADs0UGSnMuGwq4dIXxodfR9jSCIZvUOIfuTWhdYhWVGPIBFl7/T
+6mycsDMNyxDm0goCGiMBQEopzgTt/kaecjbs3M6+HqRWqGqLk+73FqfMwZhxlaRw
+eqOXDjddA5YR1L4mDlDWmtZXsu1swezTr4lnETNGIjmSsEK5t8SWJb9H6gMdhaRY
+EJZOAi2VJ0QOC3CidOoDuS+zlLiG/LplwxHak1dKu7fZ6bBvgUtweO0ZwUbwI+as
++6LVQl71WXxstwoNfy6o1N45ITST+3PFW8g9uUNnOvT4cdMjkPSqqz4SI/IHNspi
+DH6bbMDfqpSsF7OgQvcJROuQC/rsUF3/e2Z3aQUwcGbP32c6g8lBAUDT5yhsolxk
+mySaN/LhFk9mx+ZVCrbekOE+u//n4d2JPJq9xnX4lSrfyfQtOhNLP/WSXT1uXfB0
+vsyIjKxezzrfIdfZJZy9giGJk4kPpJKThpsc4n3Tzff/hs08ub41OCqxwYwUAsNq
+sCib0YNMiyG27zzk9Q/umr6Q9zACuNiRyqvPfiZNU7E4aAr22iic9Dw9mGJDwUbL
+TXsUBZ0/Mb2smvh5WI9YULstOO+rmlt0ein9MHhTJiUcKA29nKQK5brgngmBiM8d
+iTN1JCk+SFPzZLUahfca31pqfzKpHv36GuupIVgzY1/rHWWR9Wg4sWf1LQARAQAB
+tDlBbGV4YW5kZXIgTXVycGh5IChlbWFpbCBzaWduIHRlc3QpIDxzdXBlcjdAYWxl
+eG11cnBoeS5pbz6JAlcEEwEIAEEWIQSLhowiiXbH9RoGuR+FQrAQlo4BhQUCZO9H
+7wIbAwUJAAFRgAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRCFQrAQlo4B
+hchrD/0Y7CLLpI2ENdl+Ls8dZUlayxAm3lbsXVN/HW4BlpjNYxsrNcCxdgH76FXF
+QNQoWB47CTk2gtURLsJDUUMbp9haphh84fiq0WKDOrDmSEwHANtFS9Wx6723T7xD
+F0gl7y2JSibUeyfoAXrCzbBZxgJC+UcZMG+Iqoetn7fQcAkP5uKbjV303WM7dGd2
+RgIlkJJVxbZK6WS24YcfVppUq+65YPbNv1jVvyRzDmIbSuH42inwZE1LmjIS7Zsg
+7XtLJPJTAlZjS8G1r5QVvqSscOhixHPil/RzMwT53y0S4Pv+92vZApzoYKTa1g3i
+NswDphWK/I0IvvJ8DohZOwx9JAfw7mLErNYhLcB0/rg3IQtJn+W3z5b7RolE2+qI
+1l07WYUvvgPqVxZXdPm1cGapjU9QW2MzNgBri3ouPqPJw0Tx7255fW7prn0N2t+j
+dT5SMIz1eK5mdzO59HJD93vvR9e1tYiaDYH1AgsZEKD299tRILGlgnfGlglSJyz7
+GJmOlSyEDE22cROIzvYP3CXj40uf5XSE3DMn0qmpt0HyO+7CwLTYsfmEYU+na+td
+Px8Q+1rhXhpG81guaWJ2UKGZrvQdJfcd7JPV2oI+nYgvTO1ybVV1rYf7cyvPol2b
+Gd+UdogmjCZR5YtnQAmbidtWaAKH314WnhCRbXZW/o4gFK/2/A==
+=/tTX
+-----END PGP PUBLIC KEY BLOCK-----
